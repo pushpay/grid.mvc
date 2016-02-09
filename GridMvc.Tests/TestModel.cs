@@ -32,7 +32,12 @@ namespace GridMvc.Tests
                    && compareObject.UInt32Field == UInt32Field
                    && compareObject.UInt64Field == UInt64Field;
         }
-    } 
+
+	    public override string ToString()
+	    {
+		    return string.Format("[{0}:{1}]", Id, Title);
+	    }
+    }
 
     public class TestModelChild
     {

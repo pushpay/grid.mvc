@@ -9,6 +9,7 @@ using GridMvc.Filtering;
 using GridMvc.Sorting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using PowerAssert;
 
 namespace GridMvc.Tests.Filtering
 {
@@ -52,6 +53,8 @@ namespace GridMvc.Tests.Filtering
 
             //var processed processor.Process()
         }
+
+
 
         [TestMethod]
         public void TestFilterLessOrEquals()
@@ -255,8 +258,8 @@ namespace GridMvc.Tests.Filtering
         public void TestFilteringIntEquals()
         {
             var firstItem = _repo.GetAll().First();
-            var settings = MockFilterSetting("Id", firstItem.Title, GridFilterType.Contains);
-            TestFiltering(settings, x => x.Title, x => x.Id == firstItem.Id);
+            var settings = MockFilterSetting("Id", firstItem.Id.ToString(), GridFilterType.Contains);
+            TestFiltering(settings, x => x.Id, x => x.Id == firstItem.Id);
         }
 
         [TestMethod]
@@ -265,6 +268,54 @@ namespace GridMvc.Tests.Filtering
             var firstItem = _repo.GetAll().First();
             var settings = MockFilterSetting("Created2", firstItem.Child.ChildCreated.Date.ToString(CultureInfo.InvariantCulture), GridFilterType.Equals);
             TestFiltering(settings, x => x.Child.ChildCreated, x => x.Child.ChildCreated == firstItem.Child.ChildCreated);
+        }
+
+        [TestMethod]
+        public void FilterPreventedWhenColumnNotFilterable()
+        {
+            var firstItem = _repo.GetAll().First();
+            var settings = MockFilterSetting("Title", firstItem.Title, GridFilterType.Equals);
+            _grid.Columns.Add(x => x.Title, settings.ColumnName).Filterable(false);
+
+
+            var settingsMock = new Mock<IGridSettingsProvider>();
+            var filterSetting = new Mock<IGridFilterSettings>();
+            var filterCollection = new DefaultFilterColumnCollection { settings };
+
+            filterSetting.Setup(t => t.FilteredColumns).Returns(filterCollection);
+            filterSetting.Setup(t => t.IsInitState).Returns(false);
+
+            settingsMock.Setup(s => s.FilterSettings).Returns(filterSetting.Object);
+            settingsMock.Setup(s => s.SortSettings).Returns(new QueryStringSortSettings());
+            _grid.Settings = settingsMock.Object;
+
+            var resultCollection = _grid.GetItemsToDisplay();
+
+            PAssert.IsTrue(() => resultCollection.SequenceEqual(_repo.GetAll()));
+
+        }
+
+        [TestMethod]
+        public void DefaultFilterPreventedWhenColumnNotFilterable()
+        {
+            var firstItem = _repo.GetAll().First();
+            _grid.Columns.Add(x => x.Title, "Title").Filterable(false).SetInitialFilter(GridFilterType.Equals, firstItem.Title);
+
+            var settingsMock = new Mock<IGridSettingsProvider>();
+            var filterSetting = new Mock<IGridFilterSettings>();
+            var filterCollection = new DefaultFilterColumnCollection();
+
+            filterSetting.Setup(t => t.FilteredColumns).Returns(filterCollection);
+            filterSetting.Setup(t => t.IsInitState).Returns(true);
+
+            settingsMock.Setup(s => s.FilterSettings).Returns(filterSetting.Object);
+            settingsMock.Setup(s => s.SortSettings).Returns(new QueryStringSortSettings());
+            _grid.Settings = settingsMock.Object;
+
+            var resultCollection = _grid.GetItemsToDisplay();
+
+            PAssert.IsTrue(() => resultCollection.SequenceEqual(_repo.GetAll()));
+
         }
 
         private void TestFiltering<T>(ColumnFilterValue settings, Expression<Func<TestModel, T>> column,

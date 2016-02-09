@@ -38,13 +38,7 @@ namespace GridMvc.Filtering
                 if (gridColumn == null) continue;
                 if (gridColumn.Filter == null) continue;
 
-                IEnumerable<ColumnFilterValue> options = _settings.IsInitState
-                                                             ? new List<ColumnFilterValue>
-                                                                 {
-                                                                     column.InitialFilterSettings
-                                                                 }
-                                                             : _settings.FilteredColumns.GetByColumn(column);
-                foreach (ColumnFilterValue filterOptions in options)
+                foreach (ColumnFilterValue filterOptions in GetFilterValues(column))
                 {
                     if (filterOptions == ColumnFilterValue.Null)
                         continue;
@@ -52,6 +46,13 @@ namespace GridMvc.Filtering
                 }
             }
             return items;
+        }
+
+        IEnumerable<ColumnFilterValue> GetFilterValues(IGridColumn column)
+        {
+            if (!column.FilterEnabled) return new ColumnFilterValue[0];
+            if (_settings.IsInitState) return new[] { column.InitialFilterSettings };
+            return _settings.FilteredColumns.GetByColumn(column);
         }
 
         #endregion
