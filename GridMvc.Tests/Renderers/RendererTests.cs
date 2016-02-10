@@ -4,23 +4,23 @@ using System.Web;
 using GridMvc.Columns;
 using GridMvc.Filtering;
 using GridMvc.Sorting;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.Renderers
 {
     /// <summary>
     /// Summary description for SortTests
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RendererTests
     {
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             HttpContext.Current = new HttpContext(new HttpRequest("", "http://tempuri.org", ""), new HttpResponse(new StringWriter()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGridHeaderRenderer()
         {
             var renderer = new GridHeaderRenderer();
@@ -33,7 +33,7 @@ namespace GridMvc.Tests.Renderers
             Assert.IsTrue(html.Contains("class=\"grid-header\""));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGridCellRenderer()
         {
             var renderer = new GridCellRenderer();
@@ -51,7 +51,7 @@ namespace GridMvc.Tests.Renderers
             Assert.IsTrue(html.Contains("data-name=\"Title\""));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGridFilterHeaderRenderer()
         {
             var settings = new QueryStringFilterSettings();
@@ -78,7 +78,7 @@ namespace GridMvc.Tests.Renderers
             Assert.IsTrue(html.Contains("data-widgetdata="));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGridSortHeaderRenderer()
         {
             var settings = new QueryStringSortSettings();

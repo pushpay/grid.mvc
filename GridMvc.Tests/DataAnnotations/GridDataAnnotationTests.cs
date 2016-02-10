@@ -5,16 +5,16 @@ using System.Web;
 using GridMvc.Columns;
 using GridMvc.DataAnnotations;
 using GridMvc.Tests.DataAnnotations.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.DataAnnotations
 {
 
-    [TestClass]
+    [TestFixture]
     public class GridDataAnnotationTests
     {
         private Grid<TestGridAnnotationModel> _grid;
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             HttpContext.Current = new HttpContext(
@@ -23,14 +23,14 @@ namespace GridMvc.Tests.DataAnnotations
             _grid = new Grid<TestGridAnnotationModel>(Enumerable.Empty<TestGridAnnotationModel>().AsQueryable());
         }
 
-        [TestMethod]
+        [Test]
         public void TestPaging()
         {
             Assert.AreEqual(_grid.EnablePaging, true);
             Assert.AreEqual(_grid.Pager.PageSize, 20);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnsDataAnnotation()
         {
             _grid.AutoGenerateColumns();

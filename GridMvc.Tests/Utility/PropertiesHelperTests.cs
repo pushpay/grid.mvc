@@ -5,22 +5,22 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using GridMvc.Utility;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.Utility
 {
-    [TestClass]
+    [TestFixture]
     public class PropertiesHelperTests
     {
 
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnNameBuilding()
         {
             Expression<Func<TestModel, DateTime>> expr = m => m.Created;
@@ -30,7 +30,7 @@ namespace GridMvc.Tests.Utility
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnNameBuildingChilds()
         {
             Expression<Func<TestModel, string>> expr = m => m.Child.ChildTitle;
@@ -39,7 +39,7 @@ namespace GridMvc.Tests.Utility
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPropertyFromColumnName()
         {
             const string columnName = "Created";
@@ -49,7 +49,7 @@ namespace GridMvc.Tests.Utility
             Assert.AreEqual(pi.Name, "Created");
         }
 
-        [TestMethod]
+        [Test]
         public void TestGetPropertyFromColumnNameChilds()
         {
             const string columnName = "Child.ChildTitle";

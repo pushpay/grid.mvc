@@ -4,17 +4,17 @@ using System.Linq;
 using System.Web;
 using GridMvc.Columns;
 using GridMvc.DataAnnotations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.Columns
 {
-    [TestClass]
+    [TestFixture]
     public class ColumnTests
     {
         private TestGrid _grid;
         private GridColumnCollection<TestModel> _columns;
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             HttpContext.Current = new HttpContext(
@@ -30,7 +30,7 @@ namespace GridMvc.Tests.Columns
             _columns = new GridColumnCollection<TestModel>(new DefaultColumnBuilder<TestModel>(_grid, new GridAnnotaionsProvider()), _grid.Settings.SortSettings);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnsRetriveByMemberExpression()
         {
             var addedColumn = _columns.Add(x => x.Created);
@@ -39,7 +39,7 @@ namespace GridMvc.Tests.Columns
             Assert.AreEqual(addedColumn, column);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnsRetriveByName()
         {
             var addedColumn = _columns.Add(x => x.Created);
@@ -49,7 +49,7 @@ namespace GridMvc.Tests.Columns
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestRenderingEmptyValueIfNullReferenceOccurs()
         {
             var addedColumn = _columns.Add(x => x.Child.ChildTitle);
@@ -62,7 +62,7 @@ namespace GridMvc.Tests.Columns
             Assert.AreEqual(cell.Value, string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnsRetriveByNameWithCustomName()
         {
             var addedColumn = _columns.Add(x => x.Created, "My_Column");
@@ -71,7 +71,7 @@ namespace GridMvc.Tests.Columns
             Assert.AreEqual(addedColumn, column);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnsCollection()
         {
             _columns.Add();
@@ -103,7 +103,7 @@ namespace GridMvc.Tests.Columns
             Assert.AreEqual(_columns.Count(), 7);
         }
 
-        [TestMethod]
+        [Test]
         public void TestColumnInternalNameSetup()
         {
             const string name = "MyId";

@@ -7,19 +7,19 @@ using System.Linq.Expressions;
 using System.Web;
 using GridMvc.Filtering;
 using GridMvc.Sorting;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Moq;
 using PowerAssert;
 
 namespace GridMvc.Tests.Filtering
 {
-    [TestClass]
+    [TestFixture]
     public class FilterTests
     {
         private TestGrid _grid;
         private TestRepository _repo;
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             HttpContext.Current = new HttpContext(
@@ -30,7 +30,7 @@ namespace GridMvc.Tests.Filtering
             _grid = new TestGrid(_repo.GetAll());
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilter()
         {
             var filterOptions = new ColumnFilterValue
@@ -56,7 +56,7 @@ namespace GridMvc.Tests.Filtering
 
 
 
-        [TestMethod]
+        [Test]
         public void TestFilterLessOrEquals()
         {
             var filterOptions = new ColumnFilterValue
@@ -78,7 +78,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilterGreaterOrEquals()
         {
             var filterOptions = new ColumnFilterValue
@@ -100,7 +100,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilterContains()
         {
             var filterOptions = new ColumnFilterValue
@@ -122,7 +122,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestInt16Filtering()
         {
             var filterOptions = new ColumnFilterValue
@@ -144,7 +144,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestUInt16Filtering()
         {
             var filterOptions = new ColumnFilterValue
@@ -166,7 +166,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestUInt32Filtering()
         {
             var filterOptions = new ColumnFilterValue
@@ -188,7 +188,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestUInt64Filtering()
         {
             var filterOptions = new ColumnFilterValue
@@ -210,7 +210,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringDateTimeLessThan()
         {
             var filterValue = new DateTime(2005, 5, 10);
@@ -218,7 +218,7 @@ namespace GridMvc.Tests.Filtering
             TestFiltering(settings, x => x.Created, x => x.Created < filterValue);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringDateTimeLessThanWithCustomInternalColumnName()
         {
             var filterValue = new DateTime(2005, 5, 10);
@@ -230,7 +230,7 @@ namespace GridMvc.Tests.Filtering
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringStringEquals()
         {
             var firstItem = _repo.GetAll().First();
@@ -238,7 +238,7 @@ namespace GridMvc.Tests.Filtering
             TestFiltering(settings, x => x.Title, x => x.Title.ToUpper() == firstItem.Title.ToUpper());
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringStringEqualsCaseInsensative()
         {
             var firstItem = _repo.GetAll().First();
@@ -246,7 +246,7 @@ namespace GridMvc.Tests.Filtering
             TestFiltering(settings, x => x.Title, x => x.Title.ToUpper() == firstItem.Title.ToUpper());
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringStringContains()
         {
             var firstItem = _repo.GetAll().First();
@@ -254,7 +254,7 @@ namespace GridMvc.Tests.Filtering
             TestFiltering(settings, x => x.Title, x => x.Title.ToUpper().Contains(firstItem.Title.ToUpper()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringIntEquals()
         {
             var firstItem = _repo.GetAll().First();
@@ -262,7 +262,7 @@ namespace GridMvc.Tests.Filtering
             TestFiltering(settings, x => x.Id, x => x.Id == firstItem.Id);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFilteringChildEquals()
         {
             var firstItem = _repo.GetAll().First();
@@ -270,7 +270,7 @@ namespace GridMvc.Tests.Filtering
             TestFiltering(settings, x => x.Child.ChildCreated, x => x.Child.ChildCreated == firstItem.Child.ChildCreated);
         }
 
-        [TestMethod]
+        [Test]
         public void FilterPreventedWhenColumnNotFilterable()
         {
             var firstItem = _repo.GetAll().First();
@@ -295,7 +295,7 @@ namespace GridMvc.Tests.Filtering
 
         }
 
-        [TestMethod]
+        [Test]
         public void DefaultFilterPreventedWhenColumnNotFilterable()
         {
             var firstItem = _repo.GetAll().First();

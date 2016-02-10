@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Specialized;
 using GridMvc.Utility;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.Utility
 {
-    [TestClass]
+    [TestFixture]
     public class QueryStringBuilderTests
     {
         private CustomQueryStringBuilder _builder;
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestExcept()
         {
             var queryStringParameters = new NameValueCollection();
@@ -34,7 +34,7 @@ namespace GridMvc.Tests.Utility
             Assert.AreEqual(str1, string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void TestWithParameter()
         {
             var queryStringParameters = new NameValueCollection();

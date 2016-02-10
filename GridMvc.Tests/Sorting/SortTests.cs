@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using GridMvc.Filtering;
 using GridMvc.Sorting;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Moq;
 
 namespace GridMvc.Tests.Sorting
@@ -13,13 +13,13 @@ namespace GridMvc.Tests.Sorting
     /// <summary>
     /// Summary description for SortTests
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class SortTests
     {
         private TestGrid _grid;
         private TestRepository _repo;
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             HttpContext.Current = new HttpContext(
@@ -30,7 +30,7 @@ namespace GridMvc.Tests.Sorting
             _grid = new TestGrid(_repo.GetAll());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingStringDescending()
         {
             _grid.Columns.Add(x => x.Title).Sortable(true);
@@ -41,7 +41,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingStringDescendingWithCustomColumnInternalName()
         {
             _grid.Columns.Add(x => x.Title, "someid").Sortable(true);
@@ -53,7 +53,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingStringAscending()
         {
             _grid.Columns.Add(x => x.Title).Sortable(true);
@@ -65,7 +65,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingStringAscendingWithCustomColumnInternalName()
         {
             _grid.Columns.Add(x => x.Title, "someid").Sortable(true);
@@ -77,7 +77,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingIntAscending()
         {
             _grid.Columns.Add(x => x.Id).Sortable(true);
@@ -89,7 +89,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingIntDescending()
         {
             _grid.Columns.Add(x => x.Id).Sortable(true);
@@ -101,7 +101,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingChildStringAscending()
         {
             _grid.Columns.Add(x => x.Child.ChildTitle).Sortable(true);
@@ -112,7 +112,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingChildStringDescending()
         {
             _grid.Columns.Add(x => x.Child.ChildTitle).Sortable(true);
@@ -124,7 +124,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingChildDateTimeDescending()
         {
             _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true);
@@ -137,7 +137,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingChildDateTimeDescendingWithCustomInternalColumnName()
         {
             _grid.Columns.Add(x => x.Child.ChildCreated, "someid").Sortable(true);
@@ -150,7 +150,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingChildDateTimeAscending()
         {
             _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true);
@@ -163,7 +163,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingThenByAscending()
         {
             _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true).ThenSortBy(x => x.Title);
@@ -175,7 +175,7 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestSortingThenByDescending()
         {
             _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true).ThenSortByDescending(x => x.Title);

@@ -4,21 +4,21 @@ using System.Linq;
 using System.Text;
 using GridMvc.DataAnnotations;
 using GridMvc.Tests.DataAnnotations.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.DataAnnotations
 {
-    [TestClass]
+    [TestFixture]
     public class DataAnnotationsProviderTests
     {
         private IGridAnnotaionsProvider _provider;
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             _provider = new GridAnnotaionsProvider();
         }
 
-        [TestMethod]
+        [Test]
         public void TestProviderMetadataType()
         {
             var pi = typeof(TestGridAnnotationModel).GetProperty("Title");

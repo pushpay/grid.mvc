@@ -6,18 +6,18 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using GridMvc.Html;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using NUnit.Framework;
 
 namespace GridMvc.Tests.Html
 {
-    [TestClass]
+    [TestFixture]
     public class HtmlOptionsTests
     {
         private TestGrid _grid;
         private GridHtmlOptions<TestModel> _opt;
 
-        [TestInitialize]
+        [SetUp]
         public void Init()
         {
             HttpContext.Current = new HttpContext(new HttpRequest("", "http://tempuri.org", ""), new HttpResponse(new StringWriter()));
@@ -26,7 +26,7 @@ namespace GridMvc.Tests.Html
             _opt = new GridHtmlOptions<TestModel>(_grid, viewContextMock.Object, "_Grid");
         }
 
-        [TestMethod]
+        [Test]
         public void TestMainMethods()
         {
             _opt.WithPaging(5);
