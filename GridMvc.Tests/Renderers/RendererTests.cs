@@ -5,6 +5,7 @@ using GridMvc.Columns;
 using GridMvc.Filtering;
 using GridMvc.Sorting;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.Renderers
 {
@@ -28,9 +29,9 @@ namespace GridMvc.Tests.Renderers
             var htmlstring = renderer.Render(column);
             Assert.IsNotNull(htmlstring);
             var html = htmlstring.ToHtmlString();
-            Assert.IsTrue(!string.IsNullOrWhiteSpace(html));
-            Assert.IsTrue(html.Contains("<th"));
-            Assert.IsTrue(html.Contains("class=\"grid-header\""));
+            PAssert.IsTrue(() => !string.IsNullOrWhiteSpace(html));
+            PAssert.IsTrue(() => html.Contains("<th"));
+            PAssert.IsTrue(() => html.Contains("class=\"grid-header\""));
         }
 
         [Test]
@@ -43,12 +44,12 @@ namespace GridMvc.Tests.Renderers
 
             Assert.IsNotNull(htmlstring);
             var html = htmlstring.ToHtmlString();
-            Assert.IsTrue(!string.IsNullOrWhiteSpace(html));
+            PAssert.IsTrue(() => !string.IsNullOrWhiteSpace(html));
 
-            Assert.IsTrue(html.Contains("<td"));
-            Assert.IsTrue(html.Contains(">test</td>"));
-            Assert.IsTrue(html.Contains("class=\"grid-cell\""));
-            Assert.IsTrue(html.Contains("data-name=\"Title\""));
+            PAssert.IsTrue(() => html.Contains("<td"));
+            PAssert.IsTrue(() => html.Contains(">test</td>"));
+            PAssert.IsTrue(() => html.Contains("class=\"grid-cell\""));
+            PAssert.IsTrue(() => html.Contains("data-name=\"Title\""));
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace GridMvc.Tests.Renderers
             var htmlstring = renderer.Render(column);
             Assert.IsNotNull(htmlstring);
             var html = htmlstring.ToHtmlString();
-            Assert.IsTrue(string.IsNullOrEmpty(html));
+            PAssert.IsTrue(() => string.IsNullOrEmpty(html));
 
             column.Filterable(true);
 
@@ -70,12 +71,12 @@ namespace GridMvc.Tests.Renderers
             Assert.IsNotNull(htmlstring);
             html = htmlstring.ToHtmlString();
 
-            Assert.IsTrue(!string.IsNullOrWhiteSpace(html));
+            PAssert.IsTrue(() => !string.IsNullOrWhiteSpace(html));
 
-            Assert.IsTrue(html.Contains("data-filterdata="));
-            Assert.IsTrue(html.Contains("class=\"grid-filter\""));
-            Assert.IsTrue(html.Contains("class=\"grid-filter-btn\""));
-            Assert.IsTrue(html.Contains("data-widgetdata="));
+            PAssert.IsTrue(() => html.Contains("data-filterdata="));
+            PAssert.IsTrue(() => html.Contains("class=\"grid-filter\""));
+            PAssert.IsTrue(() => html.Contains("class=\"grid-filter-btn\""));
+            PAssert.IsTrue(() => html.Contains("data-widgetdata="));
         }
 
         [Test]
@@ -87,21 +88,21 @@ namespace GridMvc.Tests.Renderers
             var column = new GridColumn<TestModel, string>(c => c.Title, new TestGrid(Enumerable.Empty<TestModel>()));
 
             var htmlstring = renderer.Render(column);
-            Assert.IsNotNull(htmlstring);
+            PAssert.IsTrue(() => htmlstring != null);
             var html = htmlstring.ToHtmlString();
-            Assert.IsTrue(!html.Contains("<a"));
-            Assert.IsTrue(html.Contains("<span"));
+            PAssert.IsTrue(() => !html.Contains("<a"));
+            PAssert.IsTrue(() => html.Contains("<span"));
 
             column.Sortable(true);
 
             htmlstring = renderer.Render(column);
-            Assert.IsNotNull(htmlstring);
+            PAssert.IsTrue(() => htmlstring != null);
             html = htmlstring.ToHtmlString();
 
-            Assert.IsTrue(!string.IsNullOrWhiteSpace(html));
-            Assert.IsTrue(html.Contains("<a"));
+            PAssert.IsTrue(() => !string.IsNullOrWhiteSpace(html));
+            PAssert.IsTrue(() => html.Contains("<a"));
 
-            Assert.IsTrue(html.Contains("class=\"grid-header-title\""));
+            PAssert.IsTrue(() => html.Contains("class=\"grid-header-title\""));
         }
     }
 }

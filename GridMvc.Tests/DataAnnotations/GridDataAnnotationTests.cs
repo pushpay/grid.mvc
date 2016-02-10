@@ -6,6 +6,7 @@ using GridMvc.Columns;
 using GridMvc.DataAnnotations;
 using GridMvc.Tests.DataAnnotations.Models;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.DataAnnotations
 {
@@ -26,8 +27,8 @@ namespace GridMvc.Tests.DataAnnotations
         [Test]
         public void TestPaging()
         {
-            Assert.AreEqual(_grid.EnablePaging, true);
-            Assert.AreEqual(_grid.Pager.PageSize, 20);
+            PAssert.IsTrue(() => _grid.EnablePaging);
+            PAssert.IsTrue(() => _grid.Pager.PageSize == 20);
         }
 
         [Test]
@@ -48,19 +49,19 @@ namespace GridMvc.Tests.DataAnnotations
                     if (column == null)
                         Assert.Fail();
 
-                    Assert.AreEqual(column.EncodeEnabled, gridOpt.EncodeEnabled);
-                    Assert.AreEqual(column.FilterEnabled, gridOpt.FilterEnabled);
-                    Assert.AreEqual(column.SanitizeEnabled, gridOpt.SanitizeEnabled);
+                    PAssert.IsTrue(() => column.EncodeEnabled == gridOpt.EncodeEnabled);
+                    PAssert.IsTrue(() => column.FilterEnabled == gridOpt.FilterEnabled);
+                    PAssert.IsTrue(() => column.SanitizeEnabled == gridOpt.SanitizeEnabled);
 
                     if (!string.IsNullOrEmpty(gridOpt.Title))
-                        Assert.AreEqual(column.Title, gridOpt.Title);
+                        PAssert.IsTrue(() => column.Title == gridOpt.Title);
 
                     if (!string.IsNullOrEmpty(gridOpt.Width))
-                        Assert.AreEqual(column.Width, gridOpt.Width);
+                        PAssert.IsTrue(() => column.Width == gridOpt.Width);
                 }
                 i++;
             }
-            Assert.AreEqual(_grid.Columns.Count(), 3);
+            PAssert.IsTrue(() => _grid.Columns.Count() == 3);
         }
     }
 }

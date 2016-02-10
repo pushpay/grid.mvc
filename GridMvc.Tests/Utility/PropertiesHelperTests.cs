@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using GridMvc.Utility;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.Utility
 {
@@ -26,7 +27,7 @@ namespace GridMvc.Tests.Utility
             Expression<Func<TestModel, DateTime>> expr = m => m.Created;
 
             string name = PropertiesHelper.BuildColumnNameFromMemberExpression((MemberExpression)expr.Body);
-            Assert.AreEqual(name, "Created");
+            PAssert.IsTrue(() => name == "Created");
 
         }
 
@@ -35,7 +36,7 @@ namespace GridMvc.Tests.Utility
         {
             Expression<Func<TestModel, string>> expr = m => m.Child.ChildTitle;
             string name = PropertiesHelper.BuildColumnNameFromMemberExpression((MemberExpression)expr.Body);
-            Assert.AreEqual(name, "Child.ChildTitle");
+            PAssert.IsTrue(() => name == "Child.ChildTitle");
 
         }
 
@@ -45,8 +46,8 @@ namespace GridMvc.Tests.Utility
             const string columnName = "Created";
             IEnumerable<PropertyInfo> sequence;
             var pi = PropertiesHelper.GetPropertyFromColumnName(columnName, typeof(TestModel), out sequence);
-            Assert.AreEqual(sequence.Count(), 1);
-            Assert.AreEqual(pi.Name, "Created");
+            PAssert.IsTrue(() => sequence.Count() == 1);
+            PAssert.IsTrue(() => pi.Name == "Created");
         }
 
         [Test]
@@ -55,8 +56,8 @@ namespace GridMvc.Tests.Utility
             const string columnName = "Child.ChildTitle";
             IEnumerable<PropertyInfo> sequence;
             var pi = PropertiesHelper.GetPropertyFromColumnName(columnName, typeof(TestModel), out sequence);
-            Assert.AreEqual(sequence.Count(), 2);
-            Assert.AreEqual(pi.Name, "ChildTitle");
+            PAssert.IsTrue(() => sequence.Count() == 2);
+            PAssert.IsTrue(() => pi.Name == "ChildTitle");
         }
 
 

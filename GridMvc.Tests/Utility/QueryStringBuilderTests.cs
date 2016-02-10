@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using GridMvc.Utility;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.Utility
 {
@@ -25,13 +26,13 @@ namespace GridMvc.Tests.Utility
             _builder = new CustomQueryStringBuilder(queryStringParameters);
 
             var str1 = _builder.GetQueryStringExcept(new[] { "key1" });
-            Assert.AreEqual(str1, "?key2=value2");
+            PAssert.IsTrue(() => str1 == "?key2=value2");
 
             str1 = _builder.GetQueryStringExcept(new[] { "key2" });
-            Assert.AreEqual(str1, "?key1=value1");
+            PAssert.IsTrue(() => str1 == "?key1=value1");
 
             str1 = _builder.GetQueryStringExcept(new[] { "key1", "key2" });
-            Assert.AreEqual(str1, string.Empty);
+            PAssert.IsTrue(() => str1 == "");
         }
 
         [Test]
@@ -45,10 +46,10 @@ namespace GridMvc.Tests.Utility
             _builder = new CustomQueryStringBuilder(queryStringParameters);
 
             var str1 = _builder.GetQueryStringWithParameter("key4", "value4");
-            Assert.AreEqual(str1, "?key1=value1&key2=value2&key3=value3&key4=value4");
+            PAssert.IsTrue(() => str1 == "?key1=value1&key2=value2&key3=value3&key4=value4");
 
             str1 = _builder.GetQueryStringWithParameter("key4", "value4new");
-            Assert.AreEqual(str1, "?key1=value1&key2=value2&key3=value3&key4=value4new");
+            PAssert.IsTrue(() => str1 == "?key1=value1&key2=value2&key3=value3&key4=value4new");
         }
     }
 }

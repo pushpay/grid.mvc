@@ -5,6 +5,7 @@ using System.Web;
 using GridMvc.Columns;
 using GridMvc.DataAnnotations;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.Columns
 {
@@ -36,7 +37,7 @@ namespace GridMvc.Tests.Columns
             var addedColumn = _columns.Add(x => x.Created);
             var column = _columns.Get(x => x.Created);
 
-            Assert.AreEqual(addedColumn, column);
+            PAssert.IsTrue(() => addedColumn.Equals(column));
         }
 
         [Test]
@@ -45,7 +46,7 @@ namespace GridMvc.Tests.Columns
             var addedColumn = _columns.Add(x => x.Created);
             var column = _columns.GetByName("Created");
 
-            Assert.AreEqual(addedColumn, column);
+            PAssert.IsTrue(() => addedColumn.Equals(column));
         }
 
 
@@ -59,7 +60,7 @@ namespace GridMvc.Tests.Columns
                 Child = null
             });
 
-            Assert.AreEqual(cell.Value, string.Empty);
+            PAssert.IsTrue(() => cell.Value == "");
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace GridMvc.Tests.Columns
             var addedColumn = _columns.Add(x => x.Created, "My_Column");
             var column = _columns.GetByName("My_Column");
 
-            Assert.AreEqual(addedColumn, column);
+            PAssert.IsTrue(() => addedColumn.Equals(column));
         }
 
         [Test]
@@ -81,7 +82,7 @@ namespace GridMvc.Tests.Columns
             _columns.Add(x => x.List[1].ChildCreated, "t1");
 
             _columns.Add(x => x.Id);
-            Assert.AreEqual(_columns.Count(), 5);
+            PAssert.IsTrue(() => _columns.Count() == 5);
             try
             {
                 _columns.Add(x => x.Id);
@@ -95,12 +96,12 @@ namespace GridMvc.Tests.Columns
                 Assert.Fail();
             }
             _columns.Insert(0, x => x.Title);
-            Assert.AreEqual(_columns.Count(), 6);
-            Assert.AreEqual(_columns.ElementAt(0).Name, "Title");
+            PAssert.IsTrue(() => _columns.Count() == 6);
+            PAssert.IsTrue(() => _columns.ElementAt(0).Name == "Title");
             //test hidden columns
 
             _columns.Add(x => x.Created, true);
-            Assert.AreEqual(_columns.Count(), 7);
+            PAssert.IsTrue(() => _columns.Count() == 7);
         }
 
         [Test]
@@ -108,7 +109,7 @@ namespace GridMvc.Tests.Columns
         {
             const string name = "MyId";
             var column = _columns.Add(x => x.Id, name);
-            Assert.AreEqual(column.Name, name);
+            PAssert.IsTrue(() => column.Name == name);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using GridMvc.DataAnnotations;
 using GridMvc.Tests.DataAnnotations.Models;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.DataAnnotations
 {
@@ -23,13 +24,13 @@ namespace GridMvc.Tests.DataAnnotations
         {
             var pi = typeof(TestGridAnnotationModel).GetProperty("Title");
             var opt = _provider.GetAnnotationForColumn<TestGridAnnotationModel>(pi);
-            Assert.IsNotNull(opt);
-            Assert.AreEqual(opt.Title, "Some title"); //ensure that title reads from metadata type class
+			PAssert.IsTrue(() => opt != null);
+            PAssert.IsTrue(() => opt.Title == "Some title"); //ensure that title reads from metadata type class
 
             var gridSettings = _provider.GetAnnotationForTable<TestGridAnnotationModel>();
-            Assert.IsNotNull(gridSettings);
-            Assert.AreEqual(gridSettings.PageSize, 20);
-            Assert.AreEqual(gridSettings.PagingEnabled, true);
+			PAssert.IsTrue(() => gridSettings != null);
+			PAssert.IsTrue(() => gridSettings.PageSize == 20);
+            PAssert.IsTrue(() => gridSettings.PagingEnabled);
         }
     }
 }

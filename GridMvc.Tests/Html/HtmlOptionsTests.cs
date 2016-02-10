@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using GridMvc.Html;
 using Moq;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.Html
 {
@@ -30,17 +31,17 @@ namespace GridMvc.Tests.Html
         public void TestMainMethods()
         {
             _opt.WithPaging(5);
-            Assert.IsTrue(_grid.EnablePaging);
-            Assert.AreEqual(_grid.Pager.PageSize, 5);
+            PAssert.IsTrue(() => _grid.EnablePaging);
+            PAssert.IsTrue(() => _grid.Pager.PageSize == 5);
 
             _opt.WithMultipleFilters();
-            Assert.IsTrue(_grid.RenderOptions.AllowMultipleFilters);
+            PAssert.IsTrue(() => _grid.RenderOptions.AllowMultipleFilters);
 
-            _opt.Named("test");
-            Assert.AreEqual(_grid.RenderOptions.GridName, "test");
+			_opt.Named("test");
+            PAssert.IsTrue(() => _grid.RenderOptions.GridName == "test");
 
             _opt.Selectable(true);
-            Assert.IsTrue(_grid.RenderOptions.Selectable);
+            PAssert.IsTrue(() => _grid.RenderOptions.Selectable);
         }
     }
 }

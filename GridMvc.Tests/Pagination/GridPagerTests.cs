@@ -2,6 +2,7 @@
 using System.Web;
 using GridMvc.Pagination;
 using NUnit.Framework;
+using PowerAssert;
 
 namespace GridMvc.Tests.Pagination
 {
@@ -23,7 +24,7 @@ namespace GridMvc.Tests.Pagination
             _pager.ItemsCount = 1200;
             _pager.PageSize = 13;
 
-            Assert.AreEqual(_pager.PageCount, 93);
+            PAssert.IsTrue(() => _pager.PageCount == 93);
         }
 
         [Test]
@@ -35,9 +36,9 @@ namespace GridMvc.Tests.Pagination
             _pager.MaxDisplayedPages = 5;
             _pager.CurrentPage = 40;
 
-            Assert.AreEqual(_pager.TemplateName, "_GridPager");
-            Assert.AreEqual(_pager.StartDisplayedPage, 38);
-            Assert.AreEqual(_pager.EndDisplayedPage, 42);
+            PAssert.IsTrue(() => _pager.TemplateName == "_GridPager");
+            PAssert.IsTrue(() => _pager.StartDisplayedPage == 38);
+            PAssert.IsTrue(() => _pager.EndDisplayedPage == 42);
         }
 
         [Test]
@@ -47,7 +48,7 @@ namespace GridMvc.Tests.Pagination
             _pager.PageSize = 13;
             _pager.CurrentPage = 1000;
 
-            Assert.AreEqual(_pager.PageCount, _pager.CurrentPage);
+            PAssert.IsTrue(() => _pager.PageCount == _pager.CurrentPage);
         }
 
 
