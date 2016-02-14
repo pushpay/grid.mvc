@@ -40,3 +40,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("3.0.0.0")]
 [assembly: AssemblyInformationalVersion("$COMMIT$")]
 [assembly: InternalsVisibleTo("GridMvc.Tests")]
+
+#warning ##teamcity[buildStatisticValue key='awesomeness' value='11']
