@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using GridMvc.Columns;
 
@@ -99,6 +100,11 @@ namespace GridMvc.Html
         ///    Allow grid to show Grid items count
         /// </summary>
         IGridHtmlOptions<T> WithGridItemsCount();
+
+        /// <summary>
+        /// Execute some code when the grid reads the filtered/sorted data
+        /// </summary>
+        IGridHtmlOptions<T> WithOnItemsLoaded(Action<List<T>> itemsLoaded);
 
         /// <summary>
         ///     Obviously render Grid markup

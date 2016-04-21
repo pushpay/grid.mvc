@@ -15,6 +15,8 @@ namespace GridMvc
         protected IEnumerable<T> AfterItems; //items after processors
         protected IQueryable<T> BeforeItems; //items before processors
 
+        public event Action<List<T>> OnItemsLoaded;
+
 
         private int _itemsCount = -1; // total items count on collection
         private bool _itemsPreProcessed; //is preprocessors launched?
@@ -97,7 +99,9 @@ namespace GridMvc
                 {
                     itemsToProcess = processor.Process(itemsToProcess);
                 }
-                AfterItems = itemsToProcess.ToList(); //select from db (in EF case)
+                var list = itemsToProcess.ToList();
+                OnItemsLoaded?.Invoke(list);
+                AfterItems = list; //select from db (in EF case)
             }
         }
 

@@ -14,7 +14,7 @@
     }
 }
 
-@Html.Grid(Model).Named("ordersGrid").Columns(columns =>
+@(Html.Grid(Model).Named("ordersGrid").Columns(columns =>
     {
         /* Adding not mapped column, that renders body, using inline Razor html helper */
         columns.Add()
@@ -53,5 +53,10 @@
                 .Css("hidden-xs") //hide on phones
                 .RenderValueAs(o => CustomRenderingOfColumn(o));
 
-    }).SetRowCssClasses(item => item.Customer.IsVip ? "success" : string.Empty).WithPaging(15).Sortable().Filterable().WithMultipleFilters()
+    }).SetRowCssClasses(item => item.Customer.IsVip ? "success" : string.Empty)
+.WithPaging(15)
+.Sortable()
+.Filterable()
+.WithMultipleFilters()
+.WithOnItemsLoaded(x => x.ForEach(o=>o.Customer.CompanyName += " (awesome)")))
 

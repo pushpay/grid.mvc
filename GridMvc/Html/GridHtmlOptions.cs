@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using GridMvc.Columns;
@@ -33,6 +34,12 @@ namespace GridMvc.Html
         public IGridHtmlOptions<T> WithGridItemsCount()
         {
             return WithGridItemsCount(string.Empty);
+        }
+
+        public IGridHtmlOptions<T> WithOnItemsLoaded(Action<List<T>> itemsLoaded)
+        {
+            _source.OnItemsLoaded += itemsLoaded;
+            return this;
         }
 
         public string Render()
