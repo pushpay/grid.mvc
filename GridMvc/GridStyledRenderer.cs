@@ -7,12 +7,12 @@ namespace GridMvc
         private readonly List<string> _classes = new List<string>();
         private readonly List<string> _styles = new List<string>();
 
-        protected string GetCssClassesString()
+        public string GetCssClassesString()
         {
             return string.Join(" ", _classes);
         }
 
-        protected string GetCssStylesString()
+        public string GetCssStylesString()
         {
             return string.Join(" ", _styles);
         }
