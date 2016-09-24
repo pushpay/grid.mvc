@@ -187,7 +187,18 @@ namespace GridMvc.Tests.Sorting
             }
         }
 
-        private bool ValidateSorting<T, TNext>(TestGrid grid, Func<TestModel, T> orderExpression,
+		[Test]
+		public void TestSortingIgnoredIfAlreadyAppliedToQueryable()
+		{
+			_grid = new TestGrid(_repo.GetAll().OrderBy(x => x.Title));
+			_grid.Columns.Add(x => x.Title).Sortable(true);
+			if (ValidateSorting<string, object>(_grid, x => x.Title, "Title", GridSortDirection.Descending, null, null))
+			{
+				Assert.Fail("Sort should be ignored because it's already been applied to Queryable");
+			}
+		}
+
+		private bool ValidateSorting<T, TNext>(TestGrid grid, Func<TestModel, T> orderExpression,
                                                         string columnName,
                                                         GridSortDirection direction,
                                                         Func<TestModel, TNext> thenByExpression,
