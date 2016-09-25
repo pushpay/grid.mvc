@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using GridMvc.Html;
+using GridMvc.Sorting;
 using Moq;
 using NUnit.Framework;
 using PowerAssert;
@@ -43,5 +44,14 @@ namespace GridMvc.Tests.Html
             _opt.Selectable(true);
             PAssert.IsTrue(() => _grid.RenderOptions.Selectable);
         }
-    }
+
+	    [Test]
+	    public void WithInitialSorting()
+	    {
+		    _opt.WithInitialSorting(x => x.Title, GridSortDirection.Descending);
+			PAssert.IsTrue(()=>_grid.Settings.SortSettings.ColumnName == "Title");
+			PAssert.IsTrue(()=>_grid.Settings.SortSettings.Direction == GridSortDirection.Descending);
+	    }
+
+	}
 }

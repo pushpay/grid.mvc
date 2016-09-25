@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Web.Mvc;
 using GridMvc.Columns;
 using GridMvc.Pagination;
+using GridMvc.Sorting;
+using GridMvc.Utility;
 
 namespace GridMvc.Html
 {
@@ -173,7 +176,19 @@ namespace GridMvc.Html
             return this;
         }
 
-        #endregion
+	    public IGridHtmlOptions<T> WithInitialSorting(Expression<Func<T, object>> expression, GridSortDirection direction)
+		{
+			if (IsNoSorted) {
+				_source.Settings.SortSettings.ColumnName = PropertiesHelper.BuildColumnNameFromExpression(expression);
+			    _source.Settings.SortSettings.Direction = direction;
+		    }
+
+		    return this;
+	    }
+
+	    private bool IsNoSorted => string.IsNullOrWhiteSpace(_source.Settings.SortSettings.ColumnName);
+
+	    #endregion
 
         private static string RenderPartialViewToString(string viewName, object model, ViewContext viewContext)
         {

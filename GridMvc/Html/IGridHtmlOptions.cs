@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Web;
 using GridMvc.Columns;
+using GridMvc.Sorting;
 
 namespace GridMvc.Html
 {
@@ -106,10 +108,18 @@ namespace GridMvc.Html
         /// </summary>
         IGridHtmlOptions<T> WithOnItemsLoaded(Action<List<T>> itemsLoaded);
 
-        /// <summary>
-        ///     Obviously render Grid markup
-        /// </summary>
-        /// <returns>Grid html layout</returns>
-        string Render();
+	    /// <summary>
+	    /// Apply an initial sorting to grid, if not is specified
+	    /// </summary>
+	    /// <param name="expression"></param>
+	    /// <param name="direction"></param>
+	    /// <returns></returns>
+	    IGridHtmlOptions<T> WithInitialSorting(Expression<Func<T, object>> expression, GridSortDirection direction);
+
+		/// <summary>
+		///     Obviously render Grid markup
+		/// </summary>
+		/// <returns>Grid html layout</returns>
+		string Render();
     }
 }
