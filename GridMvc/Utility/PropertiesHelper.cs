@@ -17,7 +17,7 @@ namespace GridMvc.Utility
 
 	    public static string BuildColumnNameFromExpression(Expression expression)
 	    {
-			var visitor = new MemberExpressionExtractionVisitor();
+			var visitor = new RootMemberExpressionExtractionVisitor();
 		    visitor.Visit(expression);
 			return BuildColumnNameFromMemberExpression(visitor.MemberExpression);
 	    }
@@ -108,13 +108,13 @@ namespace GridMvc.Utility
             return (T) type.GetCustomAttributes(typeof (T), true).FirstOrDefault();
         }
 
-		class MemberExpressionExtractionVisitor : ExpressionVisitor
+		class RootMemberExpressionExtractionVisitor : ExpressionVisitor
 		{
 			public MemberExpression MemberExpression { get; private set; }
 
 			public override Expression Visit(Expression node)
 			{
-				MemberExpression = (node as MemberExpression) ?? MemberExpression;
+				MemberExpression = MemberExpression ?? (node as MemberExpression);
 				return base.Visit(node);
 			}
 		}
