@@ -15,6 +15,13 @@ namespace GridMvc.Utility
     {
         private const string PropertiesQueryStringDelimeter = ".";
 
+	    public static string BuildColumnNameFromExpression(Expression expression)
+	    {
+			var visitor = new RootMemberExpressionExtractionVisitor();
+		    visitor.Visit(expression);
+			return BuildColumnNameFromMemberExpression(visitor.MemberExpression);
+	    }
+
         public static string BuildColumnNameFromMemberExpression(MemberExpression memberExpr)
         {
             var sb = new StringBuilder();
@@ -100,5 +107,16 @@ namespace GridMvc.Utility
         {
             return (T) type.GetCustomAttributes(typeof (T), true).FirstOrDefault();
         }
-    }
+
+		class RootMemberExpressionExtractionVisitor : ExpressionVisitor
+		{
+			public MemberExpression MemberExpression { get; private set; }
+
+			public override Expression Visit(Expression node)
+			{
+				MemberExpression = MemberExpression ?? (node as MemberExpression);
+				return base.Visit(node);
+			}
+		}
+	}
 }
