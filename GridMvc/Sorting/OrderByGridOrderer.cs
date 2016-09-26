@@ -25,6 +25,15 @@ namespace GridMvc.Sorting
 
         public IQueryable<T> ApplyOrder(IQueryable<T> items, GridSortDirection direction)
         {
+	        var existingOrders = OrderByCollectionVisitor.GetOrderBysFromQueryable(items);
+	        var orderToApply = OrderByCollectionVisitor.GetOrderByFromExpression(_expression);
+
+	        if (existingOrders.Any(prop => prop == orderToApply))
+	        {
+				// order was already applied, so skip applying it
+		        return items;
+	        }
+
             switch (direction)
             {
                 case GridSortDirection.Ascending:
