@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace GridMvc.Filtering.Types
 {
@@ -36,26 +35,34 @@ namespace GridMvc.Filtering.Types
             //base implementation of building filter expressions
             filterType = GetValidType(filterType);
 
-            object typedValue = GetTypedValue(value);
+            switch (filterType) {
+                case GridFilterType.Null:
+                    return NullComparison(Expression.Equal, leftExpr);
+                case GridFilterType.NotNull:
+                    return NullComparison(Expression.NotEqual, leftExpr);
+            }
+
+            var typedValue = GetTypedValue(value);
             if (typedValue == null)
                 return null; //incorrent filter value;
 
-            Type targetType = TargetType;
+            var targetType = TargetType;
 
             Expression valueExpr = Expression.Constant(typedValue);
 
-            switch (filterType)
-            {
+            switch (filterType) {
                 case GridFilterType.Equals:
                     return Expression.Equal(leftExpr, valueExpr);
+                case GridFilterType.NotEqual:
+                    return Expression.NotEqual(leftExpr, valueExpr);
                 case GridFilterType.Contains:
-                    MethodInfo miContains = TargetType.GetMethod("Contains", new[] {typeof (string)});
+                    var miContains = TargetType.GetMethod("Contains", new[] { typeof(string) });
                     return Expression.Call(leftExpr, miContains, valueExpr);
                 case GridFilterType.StartsWith:
-                    MethodInfo miStartsWith = targetType.GetMethod("StartsWith", new[] {typeof (string)});
+                    var miStartsWith = targetType.GetMethod("StartsWith", new[] { typeof(string) });
                     return Expression.Call(leftExpr, miStartsWith, valueExpr);
                 case GridFilterType.EndsWidth:
-                    MethodInfo miEndssWith = targetType.GetMethod("EndsWith", new[] {typeof (string)});
+                    var miEndssWith = targetType.GetMethod("EndsWith", new[] { typeof(string) });
                     return Expression.Call(leftExpr, miEndssWith, valueExpr);
                 case GridFilterType.LessThan:
                     return Expression.LessThan(leftExpr, valueExpr);
@@ -65,9 +72,15 @@ namespace GridMvc.Filtering.Types
                     return Expression.GreaterThan(leftExpr, valueExpr);
                 case GridFilterType.GreaterThanOrEquals:
                     return Expression.GreaterThanOrEqual(leftExpr, valueExpr);
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static Expression NullComparison(Func<Expression, Expression, Expression> expr, Expression left)
+        {
+            return expr(Expression.ConvertChecked(left, typeof(object)), Expression.Constant(null));
         }
 
         #endregion

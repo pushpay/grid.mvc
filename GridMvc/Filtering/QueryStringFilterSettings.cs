@@ -42,27 +42,25 @@ namespace GridMvc.Filtering
 
         #endregion
 
-        private ColumnFilterValue CreateColumnData(string queryParameterValue)
+        private static ColumnFilterValue CreateColumnData(string queryParameterValue)
         {
             if (string.IsNullOrEmpty(queryParameterValue))
                 return ColumnFilterValue.Null;
 
-            string[] data = queryParameterValue.Split(new[] {FilterDataDelimeter}, StringSplitOptions.RemoveEmptyEntries);
-            if (data.Length != 3)
+            var data = queryParameterValue.Split(new[] {FilterDataDelimeter}, StringSplitOptions.RemoveEmptyEntries);
+            if (data.Length > 3 || data.Length < 2) {
                 return ColumnFilterValue.Null;
+            }
             GridFilterType type;
             if (!Enum.TryParse(data[1], true, out type))
                 type = GridFilterType.Equals;
 
-            return new ColumnFilterValue {ColumnName = data[0], FilterType = type, FilterValue = data[2]};
+            return new ColumnFilterValue {ColumnName = data[0], FilterType = type, FilterValue = data.Length == 3 ? data[2] : ""};
         }
 
         #region IGridFilterSettings Members
 
-        public IFilterColumnCollection FilteredColumns
-        {
-            get { return _filterValues; }
-        }
+        public IFilterColumnCollection FilteredColumns => _filterValues;
 
         public bool IsInitState
         {
