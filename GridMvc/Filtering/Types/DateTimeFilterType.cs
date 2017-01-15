@@ -9,8 +9,7 @@ namespace GridMvc.Filtering.Types
     /// </summary>
     internal sealed class DateTimeFilterType : FilterTypeBase
     {
-        public override Type TargetType
-        {
+        public override Type TargetType {
             get { return typeof(DateTime); }
         }
 
@@ -42,13 +41,15 @@ namespace GridMvc.Filtering.Types
         /// <returns></returns>
         public override GridFilterType GetValidType(GridFilterType type)
         {
-            switch (type)
-            {
+            switch (type) {
                 case GridFilterType.Equals:
                 case GridFilterType.GreaterThan:
                 case GridFilterType.GreaterThanOrEquals:
                 case GridFilterType.LessThan:
                 case GridFilterType.LessThanOrEquals:
+                case GridFilterType.NotEqual:
+                case GridFilterType.NotNull:
+                case GridFilterType.Null:
                     return type;
                 default:
                     return GridFilterType.Equals;
