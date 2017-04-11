@@ -18,7 +18,7 @@ namespace GridMvc
                 ^</?(b(lockquote)?|code|d(d|t|l|el)|em|h(1|2|3)|i|kbd|li|ol|p(re)?|s(ub|up|trong|trike)?|ul)>$|
                 ^<(b|h)r\s?/?>$",
                 RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace);
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
 
         private static readonly Regex WhitelistA =
             new Regex(
@@ -28,7 +28,7 @@ namespace GridMvc
                 (\stitle=""[^""<>]+"")?\s?>$|
                 ^</a>$",
                 RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace);
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
 
         private static readonly Regex WhitelistImg =
             new Regex(
@@ -41,7 +41,7 @@ namespace GridMvc
                 (\stitle=""[^""<>]*"")?
                 \s?/?>$",
                 RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace);
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.IgnoreCase);
 
         #region ISanitizer Members
 
