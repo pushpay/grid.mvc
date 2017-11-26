@@ -40,6 +40,12 @@ namespace GridMvc.Columns
         IGridColumn<T> Sanitized(bool sanitize);
 
         /// <summary>
+        /// Disable both sanitization and encoding, The only time we need to call this is when we are sure the value is not user-controlled and have html elements.
+        /// Otherwise the cell will be vulnerable to XSS attacks
+        /// </summary>
+        IGridColumn<T> DisableEncodingAndSanitizationgBecauseCellContentContainsNoUserProvidedContent();
+
+        /// <summary>
         ///     Sets the width of the column
         /// </summary>
         IGridColumn<T> SetWidth(string width);

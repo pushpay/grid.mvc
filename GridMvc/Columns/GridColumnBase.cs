@@ -15,7 +15,7 @@ namespace GridMvc.Columns
         #region IGridColumn<T> Members
 
         public bool EncodeEnabled { get; protected set; }
-        public bool SanitizeEnabled { get; set; }
+        public bool SanitizeEnabled { get; protected set; }
 
         public string Width { get; set; }
 
@@ -84,6 +84,13 @@ namespace GridMvc.Columns
         public virtual IGridColumn<T> Sanitized(bool sanitize)
         {
             SanitizeEnabled = sanitize;
+            return this;
+        }
+
+        public IGridColumn<T> DisableEncodingAndSanitizationgBecauseCellContentContainsNoUserProvidedContent()
+        {
+            SanitizeEnabled = false;
+            EncodeEnabled = false;
             return this;
         }
 
