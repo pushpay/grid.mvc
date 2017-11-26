@@ -37,6 +37,7 @@ namespace GridMvc.Columns
         ///     Sanitize column value from XSS attacks
         /// </summary>
         /// <param name="sanitize">If true values from this column will be sanitized</param>
+        [Obsolete("Not to be called externally anymore, if you have to disable sanitization call alternative method `DisableEncodingAndSanitizationgBecauseCellContentContainsNoUserProvidedContent`")]
         IGridColumn<T> Sanitized(bool sanitize);
 
         /// <summary>
