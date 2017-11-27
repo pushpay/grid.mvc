@@ -87,7 +87,7 @@ namespace GridMvc.Columns
             return this;
         }
 
-        public IGridColumn<T> DisableEncodingAndSanitizationgBecauseCellContentContainsNoUserProvidedContent()
+        public IGridColumn<T> DisableEncodingAndSanitizationBecauseCellContentContainsNoUserProvidedContent()
         {
             SanitizeEnabled = false;
             EncodeEnabled = false;
