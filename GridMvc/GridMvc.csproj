@@ -110,6 +110,7 @@
     <Compile Include="Filtering\Types\Int16FilterType.cs" />
     <Compile Include="Filtering\Types\Int64FilterType.cs" />
     <Compile Include="Filtering\Types\DecimalFilterType.cs" />
+    <Compile Include="Filtering\Types\NumberFilterType.cs" />
     <Compile Include="Filtering\Types\SingleFilterType.cs" />
     <Compile Include="Filtering\Types\DoubleFilterType.cs" />
     <Compile Include="Filtering\Types\DateTimeFilterType.cs" />

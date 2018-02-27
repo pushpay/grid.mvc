@@ -9,10 +9,7 @@ namespace GridMvc.Filtering.Types
     /// </summary>
     internal sealed class TextFilterType : FilterTypeBase
     {
-        public override Type TargetType
-        {
-            get { return typeof (String); }
-        }
+        public override Type TargetType => typeof(string);
 
         public override GridFilterType GetValidType(GridFilterType type)
         {
@@ -22,6 +19,9 @@ namespace GridMvc.Filtering.Types
                 case GridFilterType.Contains:
                 case GridFilterType.StartsWith:
                 case GridFilterType.EndsWidth:
+                case GridFilterType.NotEqual:
+                case GridFilterType.Null:
+                case GridFilterType.NotNull:
                     return type;
                 default:
                     return GridFilterType.Equals;
@@ -38,7 +38,7 @@ namespace GridMvc.Filtering.Types
             //Custom implementation of string filter type. Case insensitive compartion.
 
             filterType = GetValidType(filterType);
-            object typedValue = GetTypedValue(value);
+            var typedValue = GetTypedValue(value);
             if (typedValue == null)
                 return null; //incorrent filter value;
 
@@ -47,39 +47,55 @@ namespace GridMvc.Filtering.Types
             switch (filterType)
             {
                 case GridFilterType.Equals:
-                    binaryExpression = GetCaseInsensitiveСompartion(string.Empty, leftExpr, valueExpr);
+                    binaryExpression = GetCaseInsensitiveEquality(true, leftExpr, valueExpr);
                     break;
                 case GridFilterType.Contains:
-                    binaryExpression = GetCaseInsensitiveСompartion("Contains", leftExpr, valueExpr);
+                    binaryExpression = GetCaseInsensitiveСomparison("Contains", leftExpr, valueExpr);
                     break;
                 case GridFilterType.StartsWith:
-                    binaryExpression = GetCaseInsensitiveСompartion("StartsWith", leftExpr, valueExpr);
+                    binaryExpression = GetCaseInsensitiveСomparison("StartsWith", leftExpr, valueExpr);
                     break;
                 case GridFilterType.EndsWidth:
-                    binaryExpression = GetCaseInsensitiveСompartion("EndsWith", leftExpr, valueExpr);
+                    binaryExpression = GetCaseInsensitiveСomparison("EndsWith", leftExpr, valueExpr);
                     break;
+                case GridFilterType.NotEqual:
+                    binaryExpression = GetCaseInsensitiveEquality(false, leftExpr, valueExpr);
+                    break;
+                case GridFilterType.Null:
+                case GridFilterType.NotNull:
+                    return base.GetFilterExpression(leftExpr, value, filterType);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             return binaryExpression;
         }
 
-        private Expression GetCaseInsensitiveСompartion(string methodName, Expression leftExpr, Expression rightExpr)
+        private Expression GetCaseInsensitiveСomparison(string methodName, Expression leftExpr, Expression rightExpr)
         {
-            Type targetType = TargetType;
-            //case insensitive compartion:
-            MethodInfo miUpper = targetType.GetMethod("ToUpper", new Type[] {});
-            MethodCallExpression upperValueExpr = Expression.Call(rightExpr, miUpper);
-            MethodCallExpression upperFirstExpr = Expression.Call(leftExpr, miUpper);
+            var targetType = TargetType;
+            var miUpper = targetType.GetMethod("ToUpper", new Type[] {});
+            var upperValueExpr = Expression.Call(rightExpr, miUpper);
+            var upperFirstExpr = Expression.Call(leftExpr, miUpper);
 
-            if (!string.IsNullOrEmpty(methodName))
+            var mi = targetType.GetMethod(methodName, new[] {typeof(string)});
+            if (mi == null)
             {
-                MethodInfo mi = targetType.GetMethod(methodName, new[] {typeof (string)});
-                if (mi == null)
-                    throw new MissingMethodException("There is no method - " + methodName);
-                return Expression.Call(upperFirstExpr, mi, upperValueExpr);
+                throw new MissingMethodException("There is no method - " + methodName);
             }
-            return Expression.Equal(upperFirstExpr, upperValueExpr);
+
+            return Expression.Call(upperFirstExpr, mi, upperValueExpr);
+        }
+
+        private Expression GetCaseInsensitiveEquality(bool equal, Expression leftExpr, Expression rightExpr)
+        {
+            var targetType = TargetType;
+            var miUpper = targetType.GetMethod("ToUpper", new Type[] {});
+            var upperValueExpr = Expression.Call(rightExpr, miUpper);
+            var upperFirstExpr = Expression.Call(leftExpr, miUpper);
+
+            return !equal
+                ? Expression.NotEqual(upperFirstExpr, upperValueExpr)
+                : Expression.Equal(upperFirstExpr, upperValueExpr);
         }
     }
 }

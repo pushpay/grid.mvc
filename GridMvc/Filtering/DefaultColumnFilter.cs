@@ -24,13 +24,11 @@ namespace GridMvc.Filtering
         public IQueryable<T> ApplyFilter(IQueryable<T> items, ColumnFilterValue value)
         {
             if (value == ColumnFilterValue.Null)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
 
-            var pi = (PropertyInfo) ((MemberExpression) _expression.Body).Member;
+            PropertyInfo pi = (PropertyInfo)((MemberExpression)_expression.Body).Member;
             Expression<Func<T, bool>> expr = GetFilterExpression(pi, value);
-            if (expr == null)
-                return items;
-            return items.Where(expr);
+            return expr == null ? items : items.Where(expr);
         }
 
         #endregion
@@ -38,8 +36,8 @@ namespace GridMvc.Filtering
         private Expression<Func<T, bool>> GetFilterExpression(PropertyInfo pi, ColumnFilterValue value)
         {
             //detect nullable
-            bool isNullable = pi.PropertyType.IsGenericType &&
-                              pi.PropertyType.GetGenericTypeDefinition() == typeof (Nullable<>);
+            var isNullable = pi.PropertyType.IsGenericType &&
+                             pi.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
             //get target type:
             Type targetType = isNullable ? Nullable.GetUnderlyingType(pi.PropertyType) : pi.PropertyType;
 
@@ -49,26 +47,25 @@ namespace GridMvc.Filtering
             ParameterExpression entityParam = _expression.Parameters[0];
             //support nullable types:
             Expression firstExpr = isNullable
-                                       ? Expression.Property(_expression.Body, pi.PropertyType.GetProperty("Value"))
-                                       : _expression.Body;
+                ? Expression.Property(_expression.Body, pi.PropertyType.GetProperty("Value"))
+                : _expression.Body;
 
             Expression binaryExpression = filterType.GetFilterExpression(firstExpr, value.FilterValue, value.FilterType);
             if (binaryExpression == null) return null;
 
-            if (targetType == typeof (string))
-            {
-                //check for strings, they may be NULL
-                //It's ok for ORM, but throw exception in linq to objects. Additional check string on null
-                Expression nullExpr = Expression.NotEqual(_expression.Body, Expression.Constant(null));
-                binaryExpression = Expression.AndAlso(nullExpr, binaryExpression);
-            }
-            else if (isNullable)
-            {
-                //add additional filter condition for check items on NULL with invoring "HasValue" method.
-                //for example: result of this expression will like - c=> c.HasValue && c.Value = 3
-                MemberExpression hasValueExpr = Expression.Property(_expression.Body,
-                                                                    pi.PropertyType.GetProperty("HasValue"));
-                binaryExpression = Expression.AndAlso(hasValueExpr, binaryExpression);
+            if (value.FilterType != GridFilterType.Null) {
+                if (targetType == typeof(string)) {
+                    //check for strings, they may be NULL
+                    //It's ok for ORM, but throw exception in linq to objects. Additional check string on null
+                    Expression nullExpr = Expression.NotEqual(_expression.Body, Expression.Constant(null));
+                    binaryExpression = Expression.AndAlso(nullExpr, binaryExpression);
+                } else if (isNullable) {
+                    //add additional filter condition for check items on NULL with invoring "HasValue" method.
+                    //for example: result of this expression will like - c=> c.HasValue && c.Value = 3
+                    MemberExpression hasValueExpr = Expression.Property(_expression.Body,
+                        pi.PropertyType.GetProperty("HasValue"));
+                    binaryExpression = Expression.AndAlso(hasValueExpr, binaryExpression);
+                }
             }
             //return filter expression
             return Expression.Lambda<Func<T, bool>>(binaryExpression, entityParam);
