@@ -10,21 +10,32 @@ namespace GridMvc.Sorting
     internal class ThenByColumnOrderer<T, TKey> : IColumnOrderer<T>
     {
         private readonly Expression<Func<T, TKey>> _expression;
-        private readonly GridSortDirection _initialDirection;
+        private readonly GridSortDirection? _lockedDirection;
 
-        public ThenByColumnOrderer(Expression<Func<T, TKey>> expression, GridSortDirection initialDirection)
+		public ThenByColumnOrderer(Expression<Func<T, TKey>> expression)
         {
             _expression = expression;
-            _initialDirection = initialDirection;
+        }
+
+        public ThenByColumnOrderer(Expression<Func<T, TKey>> expression, GridSortDirection lockedDirection) : this(expression)
+        {
+            _lockedDirection = lockedDirection;
         }
 
         #region IColumnOrderer<T> Members
 
         public IQueryable<T> ApplyOrder(IQueryable<T> items)
         {
+            return ApplyOrder(items, GridSortDirection.Ascending);
+        }
+
+        public IQueryable<T> ApplyOrder(IQueryable<T> items, GridSortDirection direction)
+        {
+            var directionToUse = _lockedDirection ?? direction;
+
             var ordered = items as IOrderedQueryable<T>;
             if (ordered == null) return items; //not ordered collection
-            switch (_initialDirection)
+            switch (directionToUse)
             {
                 case GridSortDirection.Ascending:
                     return ordered.ThenBy(_expression);
@@ -33,11 +44,6 @@ namespace GridMvc.Sorting
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        public IQueryable<T> ApplyOrder(IQueryable<T> items, GridSortDirection direction)
-        {
-            return ApplyOrder(items);
         }
 
         #endregion

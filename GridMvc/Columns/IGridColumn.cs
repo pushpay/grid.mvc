@@ -135,7 +135,12 @@ namespace GridMvc.Columns
         IGridColumn<T> ThenSortBy<TKey>(Expression<Func<T, TKey>> expression);
 
         /// <summary>
-        ///     Setup ThenByDescending sorting of current column
+        ///     Setup ThenBy sorting of current column locked to ascending
+        /// </summary>
+        IGridColumn<T> ThenSortByAscending<TKey>(Expression<Func<T, TKey>> expression);
+
+        /// <summary>
+        ///     Setup ThenBy sorting of current column locked to descending
         /// </summary>
         IGridColumn<T> ThenSortByDescending<TKey>(Expression<Func<T, TKey>> expression);
     }

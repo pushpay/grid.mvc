@@ -97,6 +97,11 @@ namespace GridMvc.Columns
             return this; //Do nothing
         }
 
+        public override IGridColumn<T> ThenSortByAscending<TKey>(Expression<Func<T, TKey>> expression)
+        {
+            return this; //Do nothing
+        }
+
         public override IGridColumn<T> ThenSortByDescending<TKey>(Expression<Func<T, TKey>> expression)
         {
             return this; //Do nothing

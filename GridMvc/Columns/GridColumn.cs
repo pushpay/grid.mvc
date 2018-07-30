@@ -136,6 +136,12 @@ namespace GridMvc.Columns
 
         public override IGridColumn<T> ThenSortBy<TKey>(Expression<Func<T, TKey>> expression)
         {
+            _orderers.Add(new ThenByColumnOrderer<T, TKey>(expression));
+            return this;
+        }
+
+        public override IGridColumn<T> ThenSortByAscending<TKey>(Expression<Func<T, TKey>> expression)
+        {
             _orderers.Add(new ThenByColumnOrderer<T, TKey>(expression, GridSortDirection.Ascending));
             return this;
         }

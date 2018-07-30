@@ -168,7 +168,7 @@ namespace GridMvc.Tests.Sorting
         {
             _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true).ThenSortBy(x => x.Title);
             if (
-                !ValidateSorting(_grid, x => x.Child.ChildCreated,"Child.ChildCreated",
+                !ValidateSorting(_grid, x => x.Child.ChildCreated, "Child.ChildCreated",
                                  GridSortDirection.Ascending, x => x.Title, GridSortDirection.Ascending))
             {
                 Assert.Fail("Sort works incorrect");
@@ -177,6 +177,30 @@ namespace GridMvc.Tests.Sorting
 
         [Test]
         public void TestSortingThenByDescending()
+        {
+            _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true).ThenSortBy(x => x.Title);
+            if (
+                !ValidateSorting(_grid, x => x.Child.ChildCreated, "Child.ChildCreated",
+                                 GridSortDirection.Descending, x => x.Title, GridSortDirection.Descending))
+            {
+                Assert.Fail("Sort works incorrect");
+            }
+        }
+
+        [Test]
+        public void TestSortingThenByAscendingLocked()
+        {
+            _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true).ThenSortByAscending(x => x.Title);
+            if (
+                !ValidateSorting(_grid, x => x.Child.ChildCreated,"Child.ChildCreated",
+                                 GridSortDirection.Descending, x => x.Title, GridSortDirection.Ascending))
+            {
+                Assert.Fail("Sort works incorrect");
+            }
+        }
+
+        [Test]
+        public void TestSortingThenByDescendingLocked()
         {
             _grid.Columns.Add(x => x.Child.ChildCreated).Sortable(true).ThenSortByDescending(x => x.Title);
             if (
